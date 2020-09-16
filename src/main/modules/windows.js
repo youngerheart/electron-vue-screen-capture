@@ -1,10 +1,10 @@
 /**
  * 渲染窗口创建模块
  */
-import { BrowserWindow, Menu } from 'electron';
+import { BrowserWindow, Menu, screen, globalShortcut, systemPreferences } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import { getStaticFilePath, isMac } from '@/main/util';
-// import ScreenCapture from '@/main/modules/screenCapture';
+import ScreenCapture from '@/main/modules/screenCapture';
 const isDevelopment = process.env.WEBPACK_DEV_SERVER_URL;
 const iconPath = getStaticFilePath('capture.png');
 
@@ -30,7 +30,7 @@ export const window = {
     let config = Object.assign({}, this.pages[pageName].browserWindowConfig, {
       icon: iconPath,
       show: false,
-      title: '截屏demo',
+      title: 'screen capture demo',
       webPreferences: {
         nodeIntegration: true,
         webSecurity: false
@@ -125,10 +125,41 @@ export const window = {
     if (!mainWindow) {
       return;
     }
+    mainWindow.on('close', () => {
+      if (pageName === 'entrance') {
+        ScreenCapture.close();
+      }
+    });
     this.renderes[pageName].on('closed', () => {
       console.log(`${pageName} 窗口已销毁`);
       // 销毁子窗口实例
       this.renderes[pageName] = null;
     });
+    mainWindow.on('leave-full-screen', () => {
+      setTimeout(() => {
+        mainWindow.webContents.send('fullScreen');
+        if (mainWindow.needCapture) {
+          delete mainWindow.needCapture;
+          ScreenCapture.start(mainWindow.captureType);
+        }
+      }, 500);
+    });
+    globalShortcut.register('CommandOrControl+Shift+A', () => {
+      // 不是讲师不执行操作（授权学生也可以）
+      // if (storage.getData('role').role !== 0) return;
+      // mac请求权限
+      if (isMac() && systemPreferences.getMediaAccessStatus('screen') !== 'granted') {
+        mainWindow.webContents.send('askForScreenAccess');
+        return;
+      }
+      // 还是需要获取更多状态再决定是否打开
+      mainWindow.webContents.send('openScreenCapture');
+    });
+    // 初始化截屏窗口
+    ScreenCapture.init(mainWindow);
+
+    globalShortcut.register('Esc', ScreenCapture.prepareClose);
+    screen.on('display-added', () => ScreenCapture.close('refresh'));
+    screen.on('display-removed', () => ScreenCapture.close('refresh'));
   }
 };

@@ -5,7 +5,7 @@ import { window } from '@/main/modules/windows';
 import { ipc } from '@/global/ipc/main';
 import { isMac } from '@/main/util.js';
 
-const pages = require("../config/renderer");
+const pages = require('../config/renderer');
 
 if (!isMac()) {
   app.commandLine.appendSwitch('high-dpi-support', 1);
@@ -46,5 +46,7 @@ app.on('ready', async () => {
   // 创建渲染窗口
   window.createWindow('entrance');
   // 初始化主进程IPC
-  ipc.init(pages);
+  ipc.init();
 });
+
+app.allowRendererProcessReuse = true;
