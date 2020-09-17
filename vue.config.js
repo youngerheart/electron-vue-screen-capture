@@ -115,12 +115,12 @@ module.exports = {
         },
         win: {
           // 防止腾讯云SDK打包报错
-          extraFiles: [
-            {
-              from: 'node_modules/trtc-electron-sdk/build/Release',
-              to: '.'
-            }
-          ],
+          // extraFiles: [
+          //   {
+          //     from: 'node_modules/trtc-electron-sdk/build/Release',
+          //     to: '.'
+          //   }
+          // ],
           // win 相关配置
           icon: 'resources/captureDemo.ico', // 图标，当前图标在根目录下，ico must be at least 256x256, 注意这里有两个坑
           requestedExecutionLevel: 'highestAvailable',  //安全级别
@@ -158,7 +158,7 @@ module.exports = {
           createStartMenuShortcut: true, // 创建开始菜单图标
           shortcutName: 'captureDemo', // 图标名称
           deleteAppDataOnUninstall: true, // windows卸载时清除用户目录
-          include: 'config/win-protocol.nsh'
+          // include: 'config/win-protocol.nsh'
         },
         // for macOS - 用于在主机注册指定协议
         protocols: {
