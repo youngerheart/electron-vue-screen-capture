@@ -20,7 +20,7 @@
     "type": "git",
     "url": "git+https://github.com/youngerheart/electron-vue-screen-capture.git"
   },
-  "author": "younger",
+  "author": "youngerheart",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/youngerheart/electron-vue-screen-capture/issues"
