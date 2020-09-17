@@ -6,7 +6,7 @@ import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import { getStaticFilePath, isMac } from '@/main/util';
 import ScreenCapture from '@/main/modules/screenCapture';
 const isDevelopment = process.env.WEBPACK_DEV_SERVER_URL;
-const iconPath = getStaticFilePath('capture.png');
+const iconPath = getStaticFilePath('captureDemo.png');
 
 export const window = {
   renderes: {},
@@ -14,11 +14,11 @@ export const window = {
   init (pages) {
     this.renderes = {};
     this.pages = pages;
-    if (!isDevelopment) {
-      this.setMenu('empty');
-    } else {
-      this.setMenu('resetReloadInBigClass');
-    }
+    // if (!isDevelopment) {
+    //   this.setMenu('empty');
+    // } else {
+    this.setMenu('resetReloadInBigClass');
+    // }
     for (const key in pages) {
       // eslint-disable-next-line no-prototype-builtins
       if (pages.hasOwnProperty(key)) {
@@ -145,8 +145,6 @@ export const window = {
       }, 500);
     });
     globalShortcut.register('CommandOrControl+Shift+A', () => {
-      // 不是讲师不执行操作（授权学生也可以）
-      // if (storage.getData('role').role !== 0) return;
       // mac请求权限
       if (isMac() && systemPreferences.getMediaAccessStatus('screen') !== 'granted') {
         mainWindow.webContents.send('askForScreenAccess');

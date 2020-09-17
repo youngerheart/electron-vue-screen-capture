@@ -6,7 +6,7 @@ const fs = require('fs');
 /**
  * 返回文件后缀名
  */
-function getSuffix (name) {
+export function getSuffix (name) {
   let suffixStr = name.split('.');
   return suffixStr[suffixStr.length - 1].toLocaleLowerCase();
 }
@@ -15,7 +15,7 @@ function getSuffix (name) {
  * 读取json文件
  * @param {string} filePath 
  */
-function readJsonFile (filePath){
+export function readJsonFile (filePath){
   try {
     let json= fs.readFileSync(`${filePath}`, 'utf-8');
     return JSON.parse(json);
@@ -40,22 +40,13 @@ export function getStaticFilePath (fileName) {
   const path = require('path');
   const isDevelopment = process.env.WEBPACK_DEV_SERVER_URL;
   let filePath = '';
-  let folder = '';
-  let fileType = getSuffix(fileName);
-  switch(fileType) {
-  case 'png':
-    folder = 'icons';
-    break;
-  default:
-    folder = 'file';
-  }
   if(isDevelopment) {
-    filePath = path.join(__dirname, `../static/${folder}/${fileName}`);
+    filePath = path.join(__dirname, `../static/${fileName}`);
   } else {
     if(isMac()) {
-      filePath = path.join(path.dirname(app.getPath('exe')), `../resources/static/${folder}/${fileName}`);
+      filePath = path.join(path.dirname(app.getPath('exe')), `../Resources/${fileName}`);
     } else {
-      filePath = path.join(path.dirname(app.getPath('exe')), `/resources/static/${folder}/${fileName}`);
+      filePath = path.join(path.dirname(app.getPath('exe')), `/resources/${fileName}`);
     }
   }
   return filePath;

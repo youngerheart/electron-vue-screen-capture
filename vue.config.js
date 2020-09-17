@@ -6,6 +6,7 @@ let envPlugin = new webpack.DefinePlugin({
   'process.env.APPLEID': process.env.APPLEID,
   'process.env.APPLEIDPASS':process.env.APPLEIDPASS
 });
+// 禁止electron-builder签名: CSC_IDENTITY_AUTO_DISCOVERY=false
 
 module.exports = {
   publicPath: '/',
@@ -67,7 +68,7 @@ module.exports = {
       mainProcessWatch: ['src/main/*/*.js'], // 默认情况下将添加您的主过程文件
       builderOptions: {
         appId: 'com.younger.app',
-        productName: '截图demo', // 项目名，也是生成的安装文件名，即 vue-electron.exe
+        productName: 'captureDemo', // 项目名，也是生成的安装文件名，即 vue-electron.exe
         copyright: 'Copyright © 2020', //版权信息
         directories: {
           output: 'build', // 输出文件路径
@@ -76,11 +77,11 @@ module.exports = {
         extraResources:[
           {
             from: 'static/',
-            to: 'static/'
+            to: './'
           }
         ],
         mac: {
-          icon: 'capture.icns',
+          icon: 'captureDemo.icns',
           hardenedRuntime: true, // hardened runtime 模式
           gatekeeperAssess: false,
           entitlements: 'resources/entitlements.mac.plist',
@@ -93,10 +94,10 @@ module.exports = {
         // afterSign: 'config/notarize.js', // 公证与盖章
         dmg: {
           sign: false,
-          background: 'resources/background.tiff',
-          icon: 'resources/capture.icns', //注意格式
+          // background: 'resources/background.tiff',
+          icon: 'captureDemo.icns', //注意格式
           contents: [{
-            x: 480,
+            x: 410,
             y: 224,
             type: 'link',
             path: '/Applications'
@@ -108,7 +109,7 @@ module.exports = {
           window: {
             x: 100,  //窗口左上角起始坐标  
             y: 100,
-            width: 600,
+            width: 530,
             height: 400
           }
         },
@@ -121,7 +122,7 @@ module.exports = {
             }
           ],
           // win 相关配置
-          icon: 'resources/capture.ico', // 图标，当前图标在根目录下，ico must be at least 256x256, 注意这里有两个坑
+          icon: 'resources/captureDemo.ico', // 图标，当前图标在根目录下，ico must be at least 256x256, 注意这里有两个坑
           requestedExecutionLevel: 'highestAvailable',  //安全级别
           target: [
             {
@@ -148,21 +149,21 @@ module.exports = {
           perMachine: true, // 为所有用户安装
           menuCategory: false,
           allowToChangeInstallationDirectory: true, // 允许修改安装目录
-          installerIcon: 'resources/integrated-live-client.ico', // 安装图标
-          uninstallerIcon: 'resources/integrated-live-client.ico', //卸载图标
+          installerIcon: 'resources/captureDemo.ico', // 安装图标
+          uninstallerIcon: 'resources/captureDemo.ico', //卸载图标
           license: 'resources/introdaction_win.txt',
           // installerHeaderIcon: './shanqis.ico', // 安装时头部图标
           createDesktopShortcut: 'always', // 创建桌面图标
           unicode: true,
           createStartMenuShortcut: true, // 创建开始菜单图标
-          shortcutName: '小鹅通助手', // 图标名称
+          shortcutName: 'captureDemo', // 图标名称
           deleteAppDataOnUninstall: true, // windows卸载时清除用户目录
           include: 'config/win-protocol.nsh'
         },
         // for macOS - 用于在主机注册指定协议
         protocols: {
-          name: 'xiaoe-ilc',
-          schemes: ['xiaoe-ilc']
+          name: 'capture',
+          schemes: ['capture']
         },
         publish: [{
           provider: 'generic',  //手动提供

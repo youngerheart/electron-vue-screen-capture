@@ -11,6 +11,7 @@ export const ipc = {
    * 设置窗口
    */
   setWindow (method, options) {
+    console.error(method, options);
     ipcRenderer.send(method, options);
   },
   getCurrentScreen () {

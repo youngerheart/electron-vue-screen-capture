@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button @click="startCapture">open capture</button>
+    <button @click="startCapture()">open capture</button>
     <div><img v-show="imgSrc" :src="imgSrc" alt="capture"></div>
   </div>
 </template>
@@ -20,7 +20,6 @@ export default {
     });
     // 监听截屏数据
     this.$ipc.registerIpcEvent('getDataUrl', (dataUrl) => {
-      console.log(dataUrl);
       this.imgSrc = dataUrl;
     });
   },
@@ -31,3 +30,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+  img {
+    max-width: 100%;
+  }
+</style>

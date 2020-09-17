@@ -1,6 +1,6 @@
 'use strict';
 
-import { app } from 'electron';
+import { app, protocol } from 'electron';
 import { window } from '@/main/modules/windows';
 import { ipc } from '@/global/ipc/main';
 import { isMac } from '@/main/util.js';
@@ -13,7 +13,8 @@ if (!isMac()) {
 }
 
 // Scheme must be registered before the app is ready
-// protocol.registerSchemesAsPrivileged([{scheme: 'app', privileges: { secure: true, standard: true } }]);
+// 解除chrome对http访问下一些js方法的限制，如navigator.mediaDevices
+protocol.registerSchemesAsPrivileged([{scheme: 'app', privileges: { secure: true, standard: true } }]);
 
 if (!app.requestSingleInstanceLock()) {
   app.quit();

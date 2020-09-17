@@ -6,13 +6,9 @@ module.exports = {
     browserWindowConfig: {
       width: 800,
       height: 500,
-      resizable: false,
+      // resizable: false,
       // frame: false
-    },
-    bigWindow: {
-      width: 1200,
-      height: 640,
-    },
+    }
   },
   screenCapture: {
     name: '截屏',
