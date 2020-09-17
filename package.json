@@ -1,24 +1,31 @@
 {
-  "name": "electron-vue-screen-capture-demo",
-  "version": "1.0.0",
+  "name": "electron-vue-screen-capture",
+  "version": "0.0.1",
   "description": "",
   "main": "background.js",
   "scripts": {
     "lint": "vue-cli-service lint",
     "build": "vue-cli-service electron:build",
     "serve": "vue-cli-service electron:serve",
-    "autoFix": "eslint --fix"
+    "autoFix": "eslint --fix",
+    "test": "electron ./dist_electron/bundled/background.js"
   },
+  "files": [
+    "config/**",
+    "dist_electron/**",
+    "src/**",
+    "static/**"
+  ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/youngerheart/electron-vue-screen-capture-demo.git"
+    "url": "git+https://github.com/youngerheart/electron-vue-screen-capture.git"
   },
   "author": "younger",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/youngerheart/electron-vue-screen-capture-demo/issues"
+    "url": "https://github.com/youngerheart/electron-vue-screen-capture/issues"
   },
-  "homepage": "https://github.com/youngerheart/electron-vue-screen-capture-demo#readme",
+  "homepage": "https://github.com/youngerheart/electron-vue-screen-capture#readme",
   "dependencies": {
     "axios": "^0.19.2",
     "vue": "^2.6.11"

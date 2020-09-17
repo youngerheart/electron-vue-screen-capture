@@ -1,3 +1,4 @@
+import path from 'path';
 import { BrowserWindow, screen, powerMonitor, globalShortcut, systemPreferences, dialog } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import { isMac } from '@/main/util';
@@ -89,8 +90,12 @@ export default {
         // if (!process.env.IS_TEST) captureWin.webContents.openDevTools();
       } else {
         createProtocol('app');
+        // `app://./${pageName}.html`
         // Load the index.html when not in development
-        captureWin.loadURL(`app://./${pageName}.html`);
+        let link;
+        if (__filename.indexOf('Capture.js') !== -1) link = path.join(__dirname, `../../../dist_electron/bundled/${pageName}.html`);
+        else link = `app://./${pageName}.html`;
+        captureWin.loadURL(link);
       }
       captureWin.on('show', () => {
         if (isMac()) captureWin.setSimpleFullScreen(true);

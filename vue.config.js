@@ -68,7 +68,7 @@ module.exports = {
       mainProcessWatch: ['src/main/*/*.js'], // 默认情况下将添加您的主过程文件
       builderOptions: {
         appId: 'com.younger.app',
-        productName: 'captureDemo', // 项目名，也是生成的安装文件名，即 vue-electron.exe
+        productName: 'screenCapture', // 项目名，也是生成的安装文件名，即 vue-electron.exe
         copyright: 'Copyright © 2020', //版权信息
         directories: {
           output: 'build', // 输出文件路径
@@ -81,7 +81,7 @@ module.exports = {
           }
         ],
         mac: {
-          icon: 'captureDemo.icns',
+          icon: 'screenCapture.icns',
           hardenedRuntime: true, // hardened runtime 模式
           gatekeeperAssess: false,
           entitlements: 'resources/entitlements.mac.plist',
@@ -95,7 +95,7 @@ module.exports = {
         dmg: {
           sign: false,
           // background: 'resources/background.tiff',
-          icon: 'captureDemo.icns', //注意格式
+          icon: 'screenCapture.icns', //注意格式
           contents: [{
             x: 410,
             y: 224,
@@ -122,7 +122,7 @@ module.exports = {
           //   }
           // ],
           // win 相关配置
-          icon: 'resources/captureDemo.ico', // 图标，当前图标在根目录下，ico must be at least 256x256, 注意这里有两个坑
+          icon: 'resources/screenCapture.ico', // 图标，当前图标在根目录下，ico must be at least 256x256, 注意这里有两个坑
           requestedExecutionLevel: 'highestAvailable',  //安全级别
           target: [
             {
@@ -149,14 +149,14 @@ module.exports = {
           perMachine: true, // 为所有用户安装
           menuCategory: false,
           allowToChangeInstallationDirectory: true, // 允许修改安装目录
-          installerIcon: 'resources/captureDemo.ico', // 安装图标
-          uninstallerIcon: 'resources/captureDemo.ico', //卸载图标
+          installerIcon: 'resources/screenCapture.ico', // 安装图标
+          uninstallerIcon: 'resources/screenCapture.ico', //卸载图标
           license: 'resources/introdaction_win.txt',
           // installerHeaderIcon: './shanqis.ico', // 安装时头部图标
           createDesktopShortcut: 'always', // 创建桌面图标
           unicode: true,
           createStartMenuShortcut: true, // 创建开始菜单图标
-          shortcutName: 'captureDemo', // 图标名称
+          shortcutName: 'screenCapture', // 图标名称
           deleteAppDataOnUninstall: true, // windows卸载时清除用户目录
           // include: 'config/win-protocol.nsh'
         },
