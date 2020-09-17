@@ -174,7 +174,10 @@ export default {
       ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
       ctx.strokeStyle= '#105cfb';
       let screen = this.$ipc.getCurrentScreen();
-      getScreen(screen);
+      getScreen(screen).then(() => {
+        console.error('???');
+        if (!hasTarget) this.$ipc.setWindow('open', { name: 'screenCapture'});
+      });
       // 系统唤醒后重新获取视频流
       this.$ipc.registerIpcEvent('systemResumed', () => {
         getScreen(screen);

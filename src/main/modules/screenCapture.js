@@ -95,7 +95,7 @@ export default {
       captureWin.on('show', () => {
         if (isMac()) captureWin.setSimpleFullScreen(true);
         captureWin.interval = setInterval(() => setFocus(captureWin), 100); // 监听光标位置
-        captureWin.setAlwaysOnTop(false, 'screen-saver');
+        captureWin.setAlwaysOnTop(true, 'screen-saver');
         setTimeout(() => captureWin.webContents.send('showCapture', !!targetWin));
       });
       captureWin.on('hide', () => {

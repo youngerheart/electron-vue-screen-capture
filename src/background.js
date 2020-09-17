@@ -40,7 +40,6 @@ app.on('activate', () => {
 app.on('ready', async () => {
   // 创建渲染窗口
   ScreenCapture.init();
-  setTimeout(ScreenCapture.start, 1000);
   // 初始化主进程IPC
   ipc.init();
 });
