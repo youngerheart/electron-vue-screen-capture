@@ -1,5 +1,5 @@
-import { BrowserWindow, screen, powerMonitor } from 'electron';
-// const os = require('os');
+import { BrowserWindow, screen, powerMonitor, globalShortcut, systemPreferences, dialog } from 'electron';
+import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import { isMac } from '@/main/util';
 
 const isDevelopment = process.env.WEBPACK_DEV_SERVER_URL;
@@ -45,6 +45,11 @@ export default {
       });
     }
     if (captureWins.length) return false;
+
+    globalShortcut.register('Esc', this.prepareClose);
+    screen.on('display-added', () => this.close('refresh'));
+    screen.on('display-removed', () => this.close('refresh'));
+
     console.info('----init capture----');
     let displays = screen.getAllDisplays();
     captureWins = displays.map((display) => {
@@ -79,11 +84,11 @@ export default {
       // captureWin.setFullScreenable(true);
       // 开发环境自动打开控制台
       if (isDevelopment) {
-        //     // Load the url of the dev server if in development mode
+        // Load the url of the dev server if in development mode
         captureWin.loadURL(process.env.WEBPACK_DEV_SERVER_URL + pageName);
         // if (!process.env.IS_TEST) captureWin.webContents.openDevTools();
       } else {
-        // createProtocol('app');
+        createProtocol('app');
         // Load the index.html when not in development
         captureWin.loadURL(`app://./${pageName}.html`);
       }
@@ -91,7 +96,7 @@ export default {
         if (isMac()) captureWin.setSimpleFullScreen(true);
         captureWin.interval = setInterval(() => setFocus(captureWin), 100); // 监听光标位置
         captureWin.setAlwaysOnTop(false, 'screen-saver');
-        setTimeout(() => captureWin.webContents.send('showCapture'));
+        setTimeout(() => captureWin.webContents.send('showCapture', !!targetWin));
       });
       captureWin.on('hide', () => {
         if (isMac()) captureWin.setSimpleFullScreen(false);
@@ -102,8 +107,8 @@ export default {
         captureWin.setBounds(captureWin.bounds);
         let index = fakeWins.indexOf(captureWin);
         if (index !== -1) fakeWins.splice(index, 1);
-        if (fakeWins.length) this.close("hide");
-        else if (targetWin.captureType === 'minimum') {
+        if (fakeWins.length) this.close('hide');
+        else if (targetWin && targetWin.captureType === 'minimum') {
           targetWin.restore();
           delete targetWin.captureType;
         }
@@ -116,6 +121,11 @@ export default {
         else isForceClose ? console.log('强制关闭截图进程') : setTimeout(() => this.init(), 2000);
       });
       captureWin.bounds = display.bounds;
+      // 下载事件
+      captureWin.webContents.session.on('will-download', (event, item) => {
+        item.once('done', () => this.close('hide'));
+      });
+      // captureWin.webContents.session.on('spellcheck-dictionary-download-success', () => this.close())
       return captureWin;
     });
     // 监听系统休眠/激活
@@ -126,14 +136,30 @@ export default {
     });
   },
   start (type) {
-    targetWin.captureType = type;
-    if (isMac() && targetWin.isFullScreen()) {
-      targetWin.needCapture = true;
-      targetWin.setFullScreen(false);
-      return;
+    if (targetWin) {
+      targetWin.captureType = type;
+      if (isMac()) {
+        if (targetWin.isFullScreen()) {
+          targetWin.needCapture = true;
+          targetWin.setFullScreen(false);
+          return;
+        }
+      }
+      if (type === 'minimum') {
+        targetWin.minimize();
+        return;
+      }
     }
-    if (type === 'minimum') {
-      targetWin.minimize();
+    // tip for mac screenAuth
+    if (isMac() && systemPreferences.getMediaAccessStatus('screen') !== 'granted') {
+      dialog.showMessageBox({
+        type: 'info',
+        title: 'permission denied',
+        message: 'please open the screenCapture permission',//'请点击“重新进入”',
+        buttons: ['ok'], // , '重新进入'
+      }).then(() => {
+        this.close();
+      });
       return;
     }
     showCaptureWins();

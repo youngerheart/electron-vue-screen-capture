@@ -11,7 +11,6 @@ export const ipc = {
    * 设置窗口
    */
   setWindow (method, options) {
-    console.error(method, options);
     ipcRenderer.send(method, options);
   },
   getCurrentScreen () {
@@ -19,6 +18,6 @@ export const ipc = {
     return remote.screen.getAllDisplays().filter((d) => d.bounds.x === x && d.bounds.y === y)[0];
   },
   sendResult (data) {
-    ipcRenderer.send('sendData', { name: 'entrance', event: 'getDataUrl', data });
+    ipcRenderer.send('sendCaptureData', data);
   }
 };

@@ -9,7 +9,8 @@
       @mousemove="move($event, 'moving')"
       @mouseup="move($event, 'end')"/>
     <div v-show="cliped" class="info" :style="areaPosition(true)">{{`${clipArea.w}×${clipArea.h}`}}</div>
-    <toolbar v-show="showToolbar" :style="areaPosition()" @ok="createImage" @cancel="close"/>
+    <toolbar v-show="showToolbar" :style="areaPosition()" @ok="createImage" @cancel="close()"/>
+    <a ref="download" :href="fileUrl" class="download" :download="fileName" @change="close()"></a>
   </div>
 </template>
 <script>
@@ -17,6 +18,7 @@ import { getScreen, handleStream, getDataUrl } from './capturer';
 import toolbar from './components/Toolbar';
 import crosshairImg from './assets/crosshair.png';
 
+let hasTarget;
 let cursorStr = `url(${crosshairImg}) 16 16, crosshair`;
 // 开始截屏时原点
 let origin = null;
@@ -101,13 +103,24 @@ const drawPoint = (origins) => {
   }
 };
 
+function dataURLtoBlob (dataurl) {
+  var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+    bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new Blob([u8arr], { type: mime });
+}
+
 export default {
   data () {
     return {
       clipArea: {},
       cursor: 'none',
       showToolbar: false,
-      showBg: false
+      showBg: false,
+      fileUrl: null,
+      fileName: null
     };
   },
   mounted () {
@@ -135,8 +148,15 @@ export default {
       this.$nextTick(() => {
         let imageUrl = getDataUrl(this.clipArea, size.width);
         if (!imageUrl) return;
-        this.$ipc.sendResult(imageUrl);
-        this.close();
+        if (hasTarget) {
+          this.$ipc.sendResult(imageUrl);
+          this.close();
+        } else {
+          // download files
+          this.fileUrl = URL.createObjectURL(dataURLtoBlob(imageUrl));
+          this.fileName = `Capture-${Date.now()}.png`;
+          this.$nextTick(() => this.$refs.download.click());
+        }
       });
     },
     init () {
@@ -160,7 +180,8 @@ export default {
         getScreen(screen);
       });
       // 在显示后再截图
-      this.$ipc.registerIpcEvent('showCapture', () => {
+      this.$ipc.registerIpcEvent('showCapture', (target) => {
+        hasTarget = target;
         handleStream().then((imageUrl) => {
           //遮罩层
           ctx.globalCompositeOperation = "source-over";
@@ -338,5 +359,9 @@ export default {
     border-radius: 2px;
     font-family: Arial Consolas sans-serif;
     z-index: 3;
+  }
+
+  .download {
+    display: none;
   }
 </style>
