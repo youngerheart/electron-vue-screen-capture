@@ -2,10 +2,10 @@ const webpack = require('webpack');
 const path = require('path');
 const pages = require('./config/renderer');
 
-let envPlugin = new webpack.DefinePlugin({
-  'process.env.APPLEID': process.env.APPLEID,
-  'process.env.APPLEIDPASS':process.env.APPLEIDPASS
-});
+// let envPlugin = new webpack.DefinePlugin({
+//   'process.env.RELEASE': process.env.RELEASE
+// });
+
 // 禁止electron-builder签名: CSC_IDENTITY_AUTO_DISCOVERY=false
 
 module.exports = {
@@ -19,7 +19,7 @@ module.exports = {
 
     config.plugins.delete('preload'); // TODO: need test
     config.plugins.delete('prefetch'); // TODO: need test
-    config.plugin('global-env').use(envPlugin);
+    // config.plugin('global-env').use(envPlugin);
 
     // svg配置
     config.module

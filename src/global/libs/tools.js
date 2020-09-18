@@ -6,3 +6,6 @@ export function getScreenAccess () {
     types: ['screen']
   });
 }
+
+// 获取开发环境
+export const isDev = process.cwd().indexOf('electron-vue-screen-capture') !== -1 && process.env.WEBPACK_DEV_SERVER_URL;

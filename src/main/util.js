@@ -2,7 +2,7 @@ import { app } from 'electron';
 const os = require('os');
 const interfaces = os.networkInterfaces();
 const fs = require('fs');
-
+import { isDev } from '../global/libs/tools';
 /**
  * 返回文件后缀名
  */
@@ -38,9 +38,8 @@ export function isMac () {
  */
 export function getStaticFilePath (fileName) {
   const path = require('path');
-  const isDevelopment = process.env.WEBPACK_DEV_SERVER_URL;
   let filePath = '';
-  if(isDevelopment) {
+  if(isDev) {
     filePath = path.join(__dirname, `../static/${fileName}`);
   } else {
     if(isMac()) {

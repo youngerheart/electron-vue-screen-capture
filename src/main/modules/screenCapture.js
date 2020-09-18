@@ -1,9 +1,10 @@
 import path from 'path';
-import { BrowserWindow, screen, powerMonitor, globalShortcut, systemPreferences, dialog } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
-import { isMac } from '@/main/util';
+import { BrowserWindow, screen, powerMonitor, globalShortcut, systemPreferences, dialog } from 'electron';
+import { isMac } from '../util';
+import { isDev } from '../../global/libs/tools';
+import packageInfo from '../../../package.json';
 
-const isDevelopment = process.env.WEBPACK_DEV_SERVER_URL;
 let pageName = 'screenCapture';
 let captureWins = [];
 let fakeWins = [];
@@ -84,17 +85,20 @@ export default {
       captureWin.setVisibleOnAllWorkspaces(true);
       // captureWin.setFullScreenable(true);
       // 开发环境自动打开控制台
-      if (isDevelopment) {
+      if (isDev) {
         // Load the url of the dev server if in development mode
         captureWin.loadURL(process.env.WEBPACK_DEV_SERVER_URL + pageName);
         // if (!process.env.IS_TEST) captureWin.webContents.openDevTools();
       } else {
-        createProtocol('app');
-        // `app://./${pageName}.html`
-        // Load the index.html when not in development
         let link;
-        if (__filename.indexOf('Capture.js') !== -1) link = path.join(__dirname, `../../../dist_electron/bundled/${pageName}.html`);
-        else link = `app://./${pageName}.html`;
+        if (packageInfo._from) {
+          // 未加密
+          link = 'file://' + path.join(process.cwd(), `/node_modules/electron-vue-screen-capture/dist_electron/bundled/${pageName}.html`);
+        } else {
+          createProtocol('capture');
+          link = `capture://./${pageName}.html`;
+        }
+        console.info('load entry file: ', link);
         captureWin.loadURL(link);
       }
       captureWin.on('show', () => {
