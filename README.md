@@ -1,6 +1,6 @@
 # electron-vue-screen-capture
-a demo for screen capture base on electron & vue
 <a href="https://www.npmjs.com/package/web-node-server"><img src="https://img.shields.io/npm/v/electron-vue-screen-capture.svg?sanitize=true" alt="Version"></a>
+<p>a demo for screen capture base on electron & vue</p>
 <div>
 <img src="https://raw.githubusercontent.com/youngerheart/electron-vue-screen-capture/master/static/screenCapture.png" title="electron-vue-screen-capture" width="160px">
 </div>
