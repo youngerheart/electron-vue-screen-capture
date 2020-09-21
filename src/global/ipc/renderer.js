@@ -18,6 +18,6 @@ export const ipc = {
     return remote.screen.getAllDisplays().filter((d) => d.bounds.x === x && d.bounds.y === y)[0];
   },
   sendResult (data) {
-    ipcRenderer.send('sendCaptureData', data);
+    ipcRenderer.send('getCaptureData', data);
   }
 };

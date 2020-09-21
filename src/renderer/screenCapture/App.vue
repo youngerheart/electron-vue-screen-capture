@@ -175,8 +175,7 @@ export default {
       ctx.strokeStyle= '#105cfb';
       let screen = this.$ipc.getCurrentScreen();
       getScreen(screen).then(() => {
-        console.error('???');
-        if (!hasTarget) this.$ipc.setWindow('open', { name: 'screenCapture'});
+        this.$ipc.setWindow('open', { name: 'screenCapture', type: 'single' });
       });
       // 系统唤醒后重新获取视频流
       this.$ipc.registerIpcEvent('systemResumed', () => {

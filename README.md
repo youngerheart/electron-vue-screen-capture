@@ -21,11 +21,28 @@ module.exports = {
 }
 
 // use
-import { init, start, prepareClose, close } from 'electron-vue-screen-capture/src/main/modules/screenCapture.js'
+import { init, start, close, targetWin } from 'electron-vue-screen-capture/src/main/modules/screenCapture.js'
+// initial render process
+init(win) // your BrowserWindow
+
+// after clicked a btn，show capture window
+start(type) // type 'minimum' will hide the targetWin
+
+// after capture finished
+ipcMain.on('getCaptureData', (e, obj) => {
+  if (typeof obj !== 'object' || obj === null) return;
+  targetWin.send('getCaptureData', data);
+});
+
+// close capture manual
+close(type)
+// type 'refresh' will exit capture's windows and restart
+// type 'hide' will hide capture's windows
+// otherwise force destory capture's windows
 ```
 
 ## downloads
-[download link](https://github.com/youngerheart/electron-vue-screen-capture/releases)
+[single version](https://github.com/youngerheart/electron-vue-screen-capture/releases)
 
 ## develop
 ```js

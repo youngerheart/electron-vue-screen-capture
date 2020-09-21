@@ -8,7 +8,6 @@ import packageInfo from '../../../package.json';
 let pageName = 'screenCapture';
 let captureWins = [];
 let fakeWins = [];
-let targetWin = null;
 function showCaptureWins () {
   captureWins.forEach((win) => {
     if (!win.isVisible()) {
@@ -37,11 +36,12 @@ let setFocus = (captureWin) => {
 let isForceClose = false;
 
 export default {
+  targetWin: null,
   init (win) {
     if (win) {
-      targetWin = win;
-      targetWin.on('minimize', () => {
-        if (targetWin.captureType === 'minimum') {
+      this.targetWin = win;
+      this.targetWin.on('minimize', () => {
+        if (this.targetWin.captureType === 'minimum') {
           setTimeout(showCaptureWins, 1000);
         }
       });
@@ -94,9 +94,9 @@ export default {
         if (packageInfo._from) {
           // 未加密
           link = 'file://' + path.join(process.cwd(), `/node_modules/electron-vue-screen-capture/dist_electron/bundled/${pageName}.html`);
-        } else {
-          createProtocol('capture');
-          link = `capture://./${pageName}.html`;
+        } else if (!process.env.RELEASE) {
+          createProtocol('app');
+          link = `app://./${pageName}.html`;
         }
         console.info('load entry file: ', link);
         captureWin.loadURL(link);
@@ -105,7 +105,7 @@ export default {
         if (isMac()) captureWin.setSimpleFullScreen(true);
         captureWin.interval = setInterval(() => setFocus(captureWin), 100); // 监听光标位置
         captureWin.setAlwaysOnTop(true, 'screen-saver');
-        setTimeout(() => captureWin.webContents.send('showCapture', !!targetWin));
+        setTimeout(() => captureWin.webContents.send('showCapture', !!this.targetWin));
       });
       captureWin.on('hide', () => {
         if (isMac()) captureWin.setSimpleFullScreen(false);
@@ -117,9 +117,9 @@ export default {
         let index = fakeWins.indexOf(captureWin);
         if (index !== -1) fakeWins.splice(index, 1);
         if (fakeWins.length) this.close('hide');
-        else if (targetWin && targetWin.captureType === 'minimum') {
-          targetWin.restore();
-          delete targetWin.captureType;
+        else if (this.targetWin && this.targetWin.captureType === 'minimum') {
+          this.targetWin.restore();
+          delete this.targetWin.captureType;
         }
         setTimeout(() => captureWin.webContents.send('hideCapture'));
       });
@@ -145,17 +145,18 @@ export default {
     });
   },
   start (type) {
-    if (targetWin) {
-      targetWin.captureType = type;
+    if (this.targetWin) {
+      if (type === 'single') return;
+      this.targetWin.captureType = type;
       if (isMac()) {
-        if (targetWin.isFullScreen()) {
-          targetWin.needCapture = true;
-          targetWin.setFullScreen(false);
+        if (this.targetWin.isFullScreen()) {
+          this.targetWin.needCapture = true;
+          this.targetWin.setFullScreen(false);
           return;
         }
       }
       if (type === 'minimum') {
-        targetWin.minimize();
+        this.targetWin.minimize();
         return;
       }
     }

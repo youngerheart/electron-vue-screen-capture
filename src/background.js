@@ -12,7 +12,7 @@ if (!isMac()) {
 
 // Scheme must be registered before the app is ready
 // 解除chrome对http访问下一些js方法的限制，如navigator.mediaDevices
-if (!process.env.RELEASE) protocol.registerSchemesAsPrivileged([{scheme: 'capture', privileges: { secure: true, standard: true } }]);
+if (!process.env.RELEASE) protocol.registerSchemesAsPrivileged([{scheme: 'app', privileges: { secure: true, standard: true } }]);
 
 if (!app.requestSingleInstanceLock()) {
   app.quit();
