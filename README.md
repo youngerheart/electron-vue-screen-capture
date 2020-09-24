@@ -1,5 +1,6 @@
 # electron-vue-screen-capture
-<a href="https://www.npmjs.com/package/web-node-server"><img src="https://img.shields.io/npm/v/electron-vue-screen-capture.svg?sanitize=true" alt="Version"></a>
+[![NPM version](https://img.shields.io/npm/v/electron-vue-screen-capture.svg?sanitize=true)](https://www.npmjs.com/package/electron-vue-screen-capture)
+[![Downloads](https://img.shields.io/npm/dm/electron-vue-screen-capture.svg)](http://badge.fury.io/js/electron-vue-screen-capture)
 <p>a demo for screen capture base on electron & vue</p>
 <div>
 <img src="https://raw.githubusercontent.com/youngerheart/electron-vue-screen-capture/master/static/screenCapture.png" title="electron-vue-screen-capture" width="160px">
@@ -9,16 +10,6 @@
 ```js
 // install
 npm install electron-vue-screen-capture -S
-
-// config vue.config.js
-module.exports = {
-  publicPath: '.',
-  pluginOptions: {
-    electronBuilder: {
-      externals: ['electron-vue-screen-capture']
-    }
-  }
-}
 
 // use
 import { init, start, close, targetWin } from 'electron-vue-screen-capture/src/main/modules/screenCapture.js'
