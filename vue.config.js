@@ -2,9 +2,10 @@ const webpack = require('webpack');
 const path = require('path');
 const pages = require('./config/renderer');
 
-let envPlugin = new webpack.DefinePlugin({
-  'process.env.RELEASE': process.env.RELEASE
-});
+// let envPlugin = new webpack.DefinePlugin({
+//   'process.env.RELEASE': process.env.RELEASE,
+//   'process.env.NODE_ENV': process.env.NODE_ENV
+// });
 
 // 禁止electron-builder签名: CSC_IDENTITY_AUTO_DISCOVERY=false
 

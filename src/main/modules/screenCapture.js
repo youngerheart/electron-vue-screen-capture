@@ -1,9 +1,9 @@
 import path from 'path';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
-import { BrowserWindow, screen, powerMonitor, globalShortcut, systemPreferences, dialog } from 'electron';
+import { app, BrowserWindow, screen, powerMonitor, globalShortcut, systemPreferences, dialog } from 'electron';
 import { isMac } from '../util';
 import { isDev } from '../../global/libs/tools';
-import packageInfo from '../../../package.json';
+// import packageInfo from '../../../package.json';
 
 let pageName = 'screenCapture';
 let captureWins = [];
@@ -91,10 +91,20 @@ export default {
         // if (!process.env.IS_TEST) captureWin.webContents.openDevTools();
       } else {
         let link;
-        if (packageInfo._from) {
-          // 未加密
-          link = 'file://' + path.join(process.cwd(), `/node_modules/electron-vue-screen-capture/dist_electron/bundled/${pageName}.html`);
-        } else if (!process.env.RELEASE) {
+        // 引入版本
+        try {
+          link = require.resolve(`electron-vue-screen-capture/dist_electron/bundled/${pageName}.html`);
+          if (!isNaN(link)) {
+            let filePath;
+            if(isMac()) {
+              filePath = path.join(path.dirname(app.getPath('exe')), `../resources/`);
+            } else {
+              filePath = path.join(path.dirname(app.getPath('exe')), `/resources/`);
+            }
+            link = `file://${path.resolve(filePath, 'screen-capture/screenCapture.html')}`;
+          } else link = `file://${path.resolve(process.cwd(), link)}`;
+        } catch (err) {
+          // 独立版本
           createProtocol('app');
           link = `app://./${pageName}.html`;
         }
@@ -162,6 +172,10 @@ export default {
     }
     // tip for mac screenAuth
     if (isMac() && systemPreferences.getMediaAccessStatus('screen') !== 'granted') {
+      if (this.targetWin) {
+        this.targetWin.webContents.send('screenCaptureAuthFailed');
+        return;
+      }
       dialog.showMessageBox({
         type: 'info',
         title: 'permission denied',

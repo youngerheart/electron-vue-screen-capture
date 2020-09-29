@@ -1,6 +1,6 @@
 {
   "name": "electron-vue-screen-capture",
-  "version": "0.0.2-alpha.11",
+  "version": "0.0.3",
   "description": "",
   "main": "background.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "serve": "vue-cli-service electron:serve",
     "autoFix": "eslint --fix",
     "test": "electron ./dist_electron/bundled/background.js",
-    "release": "npm run build && rm ./dist_electron/bundled/package.json && npm publish"
+    "release": "npm run build && rm ./dist_electron/bundled/package.json && node ./src/rewrite.js && npm publish"
   },
   "files": [
     "config/*",

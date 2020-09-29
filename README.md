@@ -11,6 +11,18 @@
 // install
 npm install electron-vue-screen-capture -S
 
+// config in vue.config.js
+pluginOptions: {
+  electronBuilder: {
+    builderOptions: {
+      extraResources:[{
+        from: 'node_modules/electron-vue-screen-capture/dist_electron/bundled/',
+        to: './screen-capture'
+      }]
+    }
+  }
+}
+
 // use
 import { init, start, close, targetWin } from 'electron-vue-screen-capture/src/main/modules/screenCapture.js'
 // initial render process
@@ -24,6 +36,11 @@ ipcMain.on('getCaptureData', (e, obj) => {
   if (typeof obj !== 'object' || obj === null) return;
   targetWin.send('getCaptureData', data);
 });
+
+ipcRenderer.on('screenCaptureAuthFailed', () => {
+  // mac ScreenCapture promission failed
+  // do something in your BrowserWindow
+})
 
 // close capture manual
 close(type)

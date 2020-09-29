@@ -4,6 +4,7 @@ import { app, protocol } from 'electron';
 import ScreenCapture from '@/main/modules/screenCapture';
 import { ipc } from '@/global/ipc/main';
 import { isMac } from '@/main/util.js';
+// import packageInfo from '../package.json';
 
 if (!isMac()) {
   app.commandLine.appendSwitch('high-dpi-support', 1);
@@ -12,7 +13,8 @@ if (!isMac()) {
 
 // Scheme must be registered before the app is ready
 // 解除chrome对http访问下一些js方法的限制，如navigator.mediaDevices
-if (!process.env.RELEASE) protocol.registerSchemesAsPrivileged([{scheme: 'app', privileges: { secure: true, standard: true } }]);
+// 独立版本
+protocol.registerSchemesAsPrivileged([{scheme: 'app', privileges: { secure: true, standard: true } }]);
 
 if (!app.requestSingleInstanceLock()) {
   app.quit();
