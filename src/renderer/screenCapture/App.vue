@@ -177,8 +177,8 @@ export default {
       getScreen(screen).then(() => {
         this.$ipc.setWindow('open', { name: 'screenCapture', type: 'single' });
       });
-      // 系统唤醒后重新获取视频流
-      this.$ipc.registerIpcEvent('systemResumed', () => {
+      // 系统唤醒/解锁屏幕后重新获取视频流
+      this.$ipc.registerIpcEvent('screenReload', () => {
         getScreen(screen);
       });
       // 在显示后再截图

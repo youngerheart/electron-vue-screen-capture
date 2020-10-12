@@ -149,9 +149,15 @@ export default {
     });
     // 监听系统休眠/激活
     powerMonitor.on('resume', function () {
-      console.log('The system is going to resume');
+      console.info('The system is going to resume');
       // 通知渲染进程
-      captureWins.forEach((win) => win.webContents.send('systemResumed'));
+      captureWins.forEach((win) => win.webContents.send('screenReload'));
+    });
+    // 监听屏幕解锁
+    powerMonitor.on('unlock-screen', function () {
+      console.info('The system is going to unlock-screen');
+      // 通知渲染进程
+      captureWins.forEach((win) => win.webContents.send('screenReload'));
     });
   },
   start (type) {
