@@ -48,7 +48,6 @@ export default {
     }
     if (captureWins.length) return false;
 
-    globalShortcut.register('Esc', this.prepareClose);
     screen.on('display-added', () => this.close('refresh'));
     screen.on('display-removed', () => this.close('refresh'));
 
@@ -138,6 +137,12 @@ export default {
         if (index !== -1) captureWins.splice(index, 1);
         if (captureWins.length) this.close("refresh");
         else isForceClose ? console.log('强制关闭截图进程') : setTimeout(() => this.init(), 2000);
+      });
+      captureWin.on('focus', () => {
+        globalShortcut.register('Esc', this.prepareClose);
+      });
+      captureWin.on('blur', () => {
+        globalShortcut.unregister('Esc');
       });
       captureWin.bounds = display.bounds;
       // 下载事件
