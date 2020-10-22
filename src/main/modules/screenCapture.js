@@ -146,9 +146,11 @@ export default {
       });
       captureWin.bounds = display.bounds;
       // 下载事件
-      captureWin.webContents.session.on('will-download', (event, item) => {
-        item.once('done', () => this.close('hide'));
-      });
+      if (!this.targetWin) {
+        captureWin.webContents.session.on('will-download', (event, item) => {
+          item.once('done', () => this.close('hide'));
+        });
+      }
       // captureWin.webContents.session.on('spellcheck-dictionary-download-success', () => this.close())
       return captureWin;
     });
