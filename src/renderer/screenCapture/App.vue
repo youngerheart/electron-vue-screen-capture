@@ -149,8 +149,7 @@ export default {
         let imageUrl = getDataUrl(this.clipArea, size.width);
         if (!imageUrl) return;
         if (hasTarget) {
-          this.$ipc.sendResult(imageUrl);
-          this.close();
+          this.close(imageUrl);
         } else {
           // download files
           this.fileUrl = URL.createObjectURL(dataURLtoBlob(imageUrl));
@@ -203,7 +202,7 @@ export default {
       // 在按esc后做关闭前准备
       this.$ipc.registerIpcEvent('closeCapture', this.close);
     },
-    close () {
+    close (imageUrl) {
       this.showBg = false;
       ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
       ctx.clearRect(0, 0, size.width, size.height);
@@ -212,7 +211,9 @@ export default {
       this.clipArea = {};
       this.showToolbar = false;
       this.cursor = 'none';
-      setTimeout(() => this.$ipc.setWindow('close', {name: 'screenCapture', type: 'hide'}), 100);
+      if (hasTarget) {
+        this.$ipc.sendResult(imageUrl || false);
+      } else setTimeout(() => this.$ipc.setWindow('close', {name: 'screenCapture', type: 'hide'}), 100);
     },
     move ({ offsetX, offsetY }, key) {
       if (!this.showBg) return;

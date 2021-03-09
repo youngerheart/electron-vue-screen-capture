@@ -18,6 +18,7 @@ function showCaptureWins () {
 }
 
 let setFocus = (captureWin) => {
+  if (captureWin.isDestroyed()) return;
   let { bounds } = captureWin;
   let { x, y } = screen.getCursorScreenPoint();
   if (x === captureWin.oldX && y === captureWin.oldY) return;

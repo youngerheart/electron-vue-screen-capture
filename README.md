@@ -31,10 +31,12 @@ init(win) // your BrowserWindow
 // after clicked a btn，show capture window
 start(type) // type 'minimum' will hide the targetWin
 
-// after capture finished
-ipcMain.on('getCaptureData', (e, obj) => {
-  if (typeof obj !== 'object' || obj === null) return;
-  targetWin.send('getCaptureData', data);
+// after capture finished/cancaled
+ipcMain.on('getCaptureData', (e, data) => {
+  // base64 for image, if capture was canceled, return false
+  if (typeof data === 'string') targetWin.send('getCaptureData', data);
+  // after finish deal with image, close capture's window manualy
+  close('hide');
 });
 
 ipcRenderer.on('screenCaptureAuthFailed', () => {
@@ -42,7 +44,7 @@ ipcRenderer.on('screenCaptureAuthFailed', () => {
   // do something in your BrowserWindow
 })
 
-// close capture manual
+// close capture manualy
 close(type)
 // type 'refresh' will exit capture's windows and restart
 // type 'hide' will hide capture's windows
